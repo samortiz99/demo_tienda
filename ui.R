@@ -4,7 +4,7 @@ ui <- dashboardPage(
     title = HTML(
       "<div style = 'vertical-align:middle'>
       tienda a relacionar
-      </div>", #no me sirve este code
+      </div>" #no me sirve este code
 
       
     )
@@ -20,9 +20,9 @@ ui <- dashboardPage(
               label = "Nombre completo"
               ),
     
-    textInput(inputId = "id",
-              label = "Cédula"
-              ),
+    numericInput(inputId = "id",
+              label = "Cédula",
+              value = NULL),
     
     textInput(inputId = "hotmail",
               label = "Correo"
@@ -32,8 +32,26 @@ ui <- dashboardPage(
               label = "Dirección"
               ),
     
-    textInput(inputId = "cel",
-              label = "Número de celular"
-    ),
+    numericInput(inputId = "cel",
+              label = "Número de celular",
+              value = NULL
+              ),
+    
+    selectInput(inputId = "pais",
+                label = "País",
+                choices = c(" ",
+                            "Colombia",
+                            "Venezuela")),
+    
+    selectInput(inputId = "departamentos",
+                label = "Departamentos",
+                ""
+                ),
+    
+    actionButton(inputId = "save",
+                 label = "Guardar"
+                 ),
+    
+    reactableOutput(outputId = "table")
   )
 )
