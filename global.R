@@ -3,8 +3,10 @@ library(shinydashboard)
 library(tidyverse)
 library(reactable)
 library(htmltools)
+library(janitor)
 
 #conexiones 
+departamentos <- "Departamentos_y_municipios_de_Colombia.csv"
 
 usuarios <- data.frame("Nombre_completo" = as.character(),
                         "Cedula" = as.integer(),
@@ -22,6 +24,11 @@ source("funtions.R")
 
 #tablas conexiones
 
+deps <- read_csv(departamentos)
+deps <- deps |> 
+  select(3,5) |>
+  mutate(PAIS = "Colombia") |> 
+  clean_names()
 
 #tema
 

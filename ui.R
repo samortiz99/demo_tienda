@@ -44,7 +44,12 @@ ui <- dashboardPage(
                             "Venezuela")),
     
     selectInput(inputId = "departamentos",
-                label = "Departamentos",
+                label = "Departamento",
+                ""
+                ),
+    
+    selectInput(inputId = "municipios",
+                label = "Municipio",
                 ""
                 ),
     

@@ -1,43 +1,31 @@
 server <- function(input, output, session){
   
   
+  departamento <- reactive({
+    pais_selected <- input$pais
+    operacion_pais <- deps |>
+      filter(pais == pais_selected) |>
+      distinct(departamento)
+    return(operacion_pais)
+  })
+  
+  municipio <- reactive({
+    departamento_selected <- input$departamentos
+    operacion_dep <- deps |> 
+      filter(departamento == departamento_selected) |> 
+      distinct(municipio)
+    return(operacion_dep)
+  })
+  
+  
+  
   observeEvent(input$pais, {
+      
+      updateSelectInput(session, 
+                        "departamentos", 
+                        choices = departamento())
     
-    if(input$pais == "Colombia") {
-      updateSelectInput(session, "departamentos", 
-                        choices = c("Amazonas" = "Amazonas",
-                                    "Antioquia" = "Antioquia",
-                                    "Arauca" = "Arauca",
-                                    "Atlántico" = "Atlántico",
-                                    "Bolívar" = "Bolívar",
-                                    "Boyacá" = "Boyacá",
-                                    "Caldas" = "Caldas",
-                                    "Caquetá" = "Caquetá",
-                                    "Casanare" = "Casanare",
-                                    "Cauca" = "Cauca",
-                                    "Cesar" = "Cesar",
-                                    "Chocó" = "Chocó",
-                                    "Córdoba" = "Córdoba",
-                                    "Cundinamarca" = "Cundinamarca",
-                                    "Guainía" = "Guainía",
-                                    "Guaviare" = "Guaviare",
-                                    "Huila" = "Huila",
-                                    "La Guajira" = "La Guajira",
-                                    "Magdalena" = "Magdalena",
-                                    "Meta" = "Meta",
-                                    "Nariño" = "Nariño",
-                                    "Norte de Santander" = "Norte de Santander",
-                                    "Putumayo" = "Putumayo",
-                                    "Quindío" = "Quindío",
-                                    "Risaralda" = "Risaralda",
-                                    "San Andrés y Providencia" = "San Andrés y Providencia",
-                                    "Santander" = "Santander",
-                                    "Sucre" = "Sucre",
-                                    "Tolima" = "Tolima",
-                                    "Valle del Cauca" = "Valle del Cauca",
-                                    "Vaupés" = "Vaupés",
-                                    "Vichada" = "Vichada"))
-    }
+    
   })
   
   
