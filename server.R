@@ -1,6 +1,7 @@
 server <- function(input, output, session){
   
   
+  #reactives are defined to make selectInput function interactive whit the others
   departamento <- reactive({
     pais_selected <- input$pais
     operacion_pais <- deps |>
@@ -18,15 +19,20 @@ server <- function(input, output, session){
   })
   
   
-  
+  #observeEvent is used to update the next selectInput function in ui.R 
   observeEvent(input$pais, {
-      
-      updateSelectInput(session, 
-                        "departamentos", 
-                        choices = departamento())
-    
+    updateSelectInput(session,
+                      "departamentos", 
+                      choices = departamento())
+  })
+  
+  observeEvent(input$departamentos, {
+    updateSelectInput(session, 
+                      "municipios",
+                      choices = municipio())
     
   })
+  
   
   
   agregar_usuario <- eventReactive(input$save,{
@@ -48,7 +54,8 @@ server <- function(input, output, session){
     #the tittles need to be the same observation, check it
     #No sirve la función 
     
-    
+    write.csv(general_info,file = "asas.csv",append = F)
+    return(general_info)
   })
   
   output$table <- renderReactable({
