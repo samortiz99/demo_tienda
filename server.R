@@ -31,23 +31,30 @@ server <- function(input, output, session){
     updateSelectInput(session, 
                       "municipios",
                       choices = municipio())
-    
   })
   
   
   #eventReactive start working at the moment the input is selected by the user
   agregar_usuario <- eventReactive(input$save,{
     
+    #this variable represents the fullname of the user
     ui_fullname <- input$fullname |> as.character()
+    #this variable represents the user id
     ui_id <- input$id |>  as.character()
+    #this variable represents the user's hotmail
     ui_hotmail <- input$hotmail |>  as.character()
+    #this variable represents the user's adress
     ui_adress <- input$adress |>  as.character()
+    #this variable represents the user's cellphone
     ui_cel <- input$cel |>  as.character()
+    #this variable represents the country of the user
     ui_pais <- input$pais |>  as.character()
+    #this variable represents the department of the user
     ui_departamentos <- input$departamentos |>  as.character()
+    #this variable represents the city of the user
     ui_cities <- input$municipios |>  as.character()
     
-    
+  
     general_info <- tibble(
       nombre_completo = ui_fullname,
       cedula = ui_id,
@@ -68,33 +75,7 @@ server <- function(input, output, session){
   
   
   #observeEvent to save the user's information...
-  observeEvent(input$save, {
-    #the excel file is created if it doesn't exist
-    if (!file.exists("user_info.xlsx")) {
-      write.xlsx(tibble("nombre_completo" = as.character(),
-                        "cedula" = as.integer(),
-                        "correo" = as.character(),
-                        "direccion" = as.character(),
-                        "numero_de_celular" = as.integer(),
-                        "pais" = as.character(),
-                        "departamentos" = as.character(),
-                        "municipios" = as.character()),
-                 file = "user_info.xlsx",
-                 rowNames = FALSE)
-    }
-    
-    #to add the user's information to the excel (have to fix this funtion)
-    
-    
-    
-    write.xlsx(agregar_usuario(),
-               file = "user_info.xlsx",
-               sheet = "Sheet 1",
-               append = TRUE,
-               rowNames = FALSE
-               )
-    
-  })
+  
   
   
   output$table <- renderReactable({
