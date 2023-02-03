@@ -4,31 +4,24 @@ library(tidyverse)
 library(reactable)
 library(htmltools)
 library(janitor)
+library(readxl)
+library(openxlsx)
 
 #conexiones 
 departamentos <- "Departamentos_y_municipios_de_Colombia.csv"
-
-usuarios <- data.frame("Nombre_completo" = as.character(),
-                        "Cedula" = as.integer(),
-                        "Correo" = as.character(),
-                        "Direccion" = as.character(),
-                        "Numero_de_celular" = as.integer(),
-                        "x1" = as.character(),
-                        "x2" = as.character(),
-                        "x3" = as.character()) 
-usuarios %>% 
-  as.character("Nombre_completo")
 
 #funciones
 source("funtions.R")
 
 #tablas conexiones
 
-deps <- read_csv(departamentos)
+deps <- read_csv(departamentos,
+                 col_types = cols(.default = col_character()))
 deps <- deps |> 
   select(3,5) |>
-  mutate(PAIS = "Colombia") |> 
-  clean_names()
+  mutate(pais = "Colombia") |> 
+  clean_names() #clean_names functions just can be applied in non-null tibbles -
+                #and it return values " " as "_" and uppers as lower
 
 #tema
 

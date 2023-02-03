@@ -4,58 +4,94 @@ ui <- dashboardPage(
     title = HTML(
       "<div style = 'vertical-align:middle'>
       tienda a relacionar
-      </div>" #no me sirve este code
-
-      
-    )
-    
+      </div>") #no me sirve este code
   ),
+  
   
   sidebar <- dashboardSidebar(
-    disable = TRUE
-  ),
+    disable = TRUE),
+  
   
   body <- dashboardBody(
-    textInput(inputId = "fullname", 
-              label = "Nombre completo"
-              ),
     
-    numericInput(inputId = "id",
-              label = "Cédula",
-              value = NULL),
+    fluidRow(
+      column(width = 3,
+             textInput(
+               inputId = "fullname",
+               label = "Nombre completo"
+              )
+             ),
+      column(width = 3,
+             numericInput(
+               inputId = "id",
+               label = "Cédula",
+               value = NULL
+              )
+             )
+      ),
     
-    textInput(inputId = "hotmail",
-              label = "Correo"
-              ),
+    fluidRow(
+      column(width=3,
+             textInput(
+               inputId = "hotmail",
+               label = "Correo",
+               value = NULL
+             )
+            ),
+      column(width=3,
+             textInput(
+               inputId = "adress",
+               label = "Dirección",
+               value = NULL
+             )
+      )
+    ),
     
-    textInput(inputId = "direction",
-              label = "Dirección"
-              ),
+    fluidRow(
+      column(width = 3,
+             numericInput(
+               inputId = "cel",
+               label = "Número de celular",
+               value = NULL
+              )
+             ),
+      column(width = 3,
+             selectInput(
+               inputId = "pais",
+               label = "País",
+               choices = c(" ",
+                           "Colombia",
+                           "Venezuela")
+             )
+            )
+    ),
     
-    numericInput(inputId = "cel",
-              label = "Número de celular",
-              value = NULL
-              ),
+    fluidRow(
+      column(width = 3,
+             selectInput(
+               inputId = "departamentos",
+               label = "Departamento",
+               ""
+             )
+            ),
+      column(width = 3,
+             selectInput(
+               inputId = "municipios",
+               label = "Municipio",
+               ""
+             )
+            )
+    ),
     
-    selectInput(inputId = "pais",
-                label = "País",
-                choices = c(" ",
-                            "Colombia",
-                            "Venezuela")),
-    
-    selectInput(inputId = "departamentos",
-                label = "Departamento",
-                ""
-                ),
-    
-    selectInput(inputId = "municipios",
-                label = "Municipio",
-                ""
-                ),
-    
-    actionButton(inputId = "save",
-                 label = "Guardar"
-                 ),
+    fluidRow(
+      column(width = 1,
+             align = "center",
+             actionButton(
+               inputId = "save",
+               label = "Guardar"
+             )
+            )
+    ),
     
     reactableOutput(outputId = "table")
   )
