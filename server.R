@@ -37,21 +37,21 @@ server <- function(input, output, session){
   #eventReactive start working at the moment the input is selected by the user
   agregar_usuario <- eventReactive(input$save,{
     
-    #this variable represents the fullname of the user
+    #this variable represents the fullname entered by the user
     ui_fullname <- input$fullname |> as.character()
-    #this variable represents the user id
+    #this variable represents the id entered by user
     ui_id <- input$id |>  as.character()
-    #this variable represents the user's hotmail
+    #this variable represents the hotmail entered by user
     ui_hotmail <- input$hotmail |>  as.character()
-    #this variable represents the user's adress
+    #this variable represents the adress entered by user
     ui_adress <- input$adress |>  as.character()
-    #this variable represents the user's cellphone
+    #this variable represents the cellphone entered by user
     ui_cel <- input$cel |>  as.character()
-    #this variable represents the country of the user
+    #this variable represents the country entered by user
     ui_pais <- input$pais |>  as.character()
-    #this variable represents the department of the user
+    #this variable represents the department entered by user
     ui_departamentos <- input$departamentos |>  as.character()
-    #this variable represents the city of the user
+    #this variable represents the city entered by user
     ui_cities <- input$municipios |>  as.character()
     
   
@@ -72,11 +72,6 @@ server <- function(input, output, session){
     return(general_info)
 
   })
-  
-  
-  #observeEvent to save the user's information...
-  
-  
   
   output$table <- renderReactable({
     
