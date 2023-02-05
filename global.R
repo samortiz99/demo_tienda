@@ -18,7 +18,7 @@ source("funtions.R")
 deps <- read_csv(departamentos,
                  col_types = cols(.default = col_character()))
 deps <- deps |> 
-  select(3,5) |>
+  select(3,5) |> 
   mutate(pais = "Colombia") |> 
   clean_names() #clean_names functions just can be applied in non-null tibbles -
                 #and it return values " " as "_" and uppers as lower

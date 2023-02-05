@@ -3,7 +3,7 @@ ui <- dashboardPage(
   head <- dashboardHeader(title = "tienda a relacionar"),
   
   sidebar <- dashboardSidebar(
-    sidebarMenu(id = "tabs",
+    sidebarMenu(id = "tabs", #this argument will be used in <conditionalPanel>
       menuItem(text = "Home", tabName = "informacion_ingresada"),
       menuItem(text = "Shop", tabName = "shop"))),
   
@@ -12,7 +12,8 @@ ui <- dashboardPage(
     
     conditionalPanel("input.tabs == 'informacion_ingresada'",
                      tabsetPanel(
-                       tabPanel(title = "in tabPanel",
+                       tabPanel(title = "Registro",
+                                br(), #br is used to make a small enter in the ui
                                 fluidRow(
                                   column(width = 3,
                                          textInput(
@@ -58,6 +59,7 @@ ui <- dashboardPage(
                                            inputId = "municipios",
                                            label = "Municipio",
                                            ""))),
+                                br(),
                                 fluidRow(
                                   column(width = 1,
                                          align = "center",
@@ -66,8 +68,9 @@ ui <- dashboardPage(
                                            label = "Guardar"))),
                                 reactableOutput(outputId = "table")),
                        
-                       tabPanel(title ="in information",
-                                helpText("user's info")))),
+                       tabPanel(title ="Validar registro",
+                                br(),
+                                helpText("Si quiere confirmar su registro, ingrese su identificación aquí:")))),
     
     conditionalPanel("input.tabs == 'shop'",
                      tabsetPanel(
