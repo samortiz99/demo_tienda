@@ -70,14 +70,30 @@ ui <- dashboardPage(
                        
                        tabPanel(title ="Validar registro",
                                 br(),
-                                helpText("Si quiere confirmar su registro, ingrese su identificación aquí:")))),
+                                helpText("Si quiere confirmar su registro, ingrese su identificación aquí:"),
+                                numericInput(inputId = "cc_validation",
+                                             label = NULL,
+                                             value = NULL),
+                                actionButton(inputId = "validation_button",
+                                             label = "Validar")
+                                
+                                )
+                       )
+                     ),
     
     conditionalPanel("input.tabs == 'shop'",
                      tabsetPanel(
-                       tabPanel(title ="Crear nuevo grupo",
-                                helpText("Por favor registre el nombre del nuevo grupo:")),
-                       tabPanel(title ="in shop",
-                                helpText("Aquí se vende"))
+                       tabPanel(title ="productos",
+                                br(),
+                                helpText("validar registro para poder acceder a la tienda"),
+                                numericInput(inputId = "cc_validacion",
+                                             label = NULL,
+                                             value = NULL)),
+                       
+                       ##PENDIENTE AGREGAR LOS PRODUCTOS, QUE SEAN VISIBLES SOLO SI EL USUARIO ESTÁ REGISTRADO
+                       
+                       tabPanel(title ="carrito",
+                                helpText("pedidos solicitados, y activar casilla solo si el usuario está registrado"))
                      )
                      )
   )
