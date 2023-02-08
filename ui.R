@@ -1,17 +1,39 @@
 ui <- dashboardPage(
   
-  head <- dashboardHeader(title = "tienda a relacionar"),
+  head <- dashboardHeader(title = "FORMULARIO"),
   
   sidebar <- dashboardSidebar(
-    sidebarMenu(id = "tabs", #this argument will be used in <conditionalPanel>
-      menuItem(text = "Home", tabName = "informacion_ingresada"),
-      menuItem(text = "Shop", tabName = "shop"))),
+    sidebarMenu(id = "tabs",          #this argument will be used in <conditionalPanel>
+      menuItem(
+        text = "Home", 
+        tabName = "informacion_ingresada"),
+      menuItem(
+        text = "Shop", 
+        tabName = "shop"))),
   
   
   body <- dashboardBody(
+    use_theme(mytheme),              #mytheme is defined in global
+    useShinyjs(),
     
     conditionalPanel("input.tabs == 'informacion_ingresada'",
                      tabsetPanel(
+                       tabPanel(title ="Validar registro",
+                                br(),
+                                fluidRow( #Se añaden 3 columns y se elige la del centro para centrar el input
+                                  column(width = 4),
+                                  column(width = 4,
+                                         helpText("Ingresar cédula:"),
+                                         numericInput(inputId = "cc_validation_registro",
+                                                      label = NULL,
+                                                      value = NULL),
+                                         actionButton(inputId = "validation_button",
+                                                      label = "Validar"),
+                                         textOutput(outputId = "user_validation"),
+                                         helpText("Agregar los colores propuestos en la presentación excel")),
+                                         ),
+                                  column(width = 4)),
+                                
                        tabPanel(title = "Registro",
                                 br(), #br is used to make a small enter in the ui
                                 fluidRow(
@@ -53,31 +75,19 @@ ui <- dashboardPage(
                                          selectInput(
                                            inputId = "departamentos",
                                            label = "Departamento",
-                                           "")),
+                                           choices = NULL)),
                                   column(width = 3,
                                          selectInput(
                                            inputId = "municipios",
                                            label = "Municipio",
-                                           ""))),
-                                br(),
+                                           choices = NULL))),
                                 fluidRow(
                                   column(width = 1,
                                          align = "center",
                                          actionButton(
                                            inputId = "save",
                                            label = "Guardar"))),
-                                reactableOutput(outputId = "table")),
-                       
-                       tabPanel(title ="Validar registro",
-                                br(),
-                                helpText("Si quiere confirmar su registro, ingrese su identificación aquí:"),
-                                numericInput(inputId = "cc_validation",
-                                             label = NULL,
-                                             value = NULL),
-                                actionButton(inputId = "validation_button",
-                                             label = "Validar")
-                                
-                                )
+                                reactableOutput(outputId = "table"))
                        )
                      ),
     
@@ -85,16 +95,36 @@ ui <- dashboardPage(
                      tabsetPanel(
                        tabPanel(title ="productos",
                                 br(),
-                                helpText("validar registro para poder acceder a la tienda"),
-                                numericInput(inputId = "cc_validacion",
-                                             label = NULL,
-                                             value = NULL)),
+                                selectInput(
+                                  inputId = "categoria_productos",
+                                  label = "Seleccione categoría del producto:",
+                                  choices = NULL
+                                ),
+                                selectInput(
+                                  inputId = "productos",
+                                  label = "Seleccione el producto",
+                                  choices = NULL
+                                ),
+                                numericInput(
+                                  inputId = "cantidad_productos_solicitados",
+                                  label = "ingresar cantidad",
+                                  value = NULL
+                                ),
+                                helpText("Aquí va un textOutput con el valor a pagar"),#eliminar esto
+                                textOutput(outputId = "payment"),
+                                actionButton(inputId = "agregar_al_carrito",
+                                             label = "Añadir al carrito"
+                                             )),
                        
                        ##PENDIENTE AGREGAR LOS PRODUCTOS, QUE SEAN VISIBLES SOLO SI EL USUARIO ESTÁ REGISTRADO
                        
                        tabPanel(title ="carrito",
-                                helpText("pedidos solicitados, y activar casilla solo si el usuario está registrado"))
+                                br(),
+                                helpText("información del usuario"),
+                                helpText("pedidos realizados"),
+                                helpText("valor a pagar"))
                      )
                      )
   )
 )
+
