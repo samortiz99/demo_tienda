@@ -1,20 +1,38 @@
 server <- function(input, output, session){
   
-  #shiny::observe({
-    #if (#agregar función) {
-    #  #aquí falta agregar el shinyjs::hide()
-    #}
-  #})
+  # shiny::observe({
+  #   user_validation <- input$cc_validation_registro
+  #   if (user_validation %notin% user_check$user_id) {
+  #     shinyjs::hide(session, "shop")
+  #   }
+  # })
   
+  #---Para redirigir el usuario a la pestaña shop en caso de estar registrado---#
   
-  #reactives are defined to make selectInput function interactive whit the others
-  #makes the next observeEvent "automatic"
+  observeEvent(input$validation_button, {
+    user_validation <- input$cc_validation_registro
+    if (user_validation %in% user_check$user_id) {
+      updateTabItems(session, "tabs", "shop")
+    }
+  })
+  
+  #---Para redirigir el usuario a la pestaña Registro en caso de estar registrado---#
+  
+  observeEvent(input$validation_button, {
+    user_validation <- input$cc_validation_registro
+    if (!user_validation %in% user_check$user_id) {
+      updateTabItems(session, "tabs", "informacion_ingresada", "registro")
+    }
+   })
+  
+  #------------- Definición valores de los selectInput en registro ------------#
+  
   departamento <- reactive({
     pais_selected <- input$pais
     operacion_pais <- deps |>
       filter(pais == pais_selected) |>
-      distinct(departamento) #distinct is kind of groupby, it takes one of all same elements
-    return(operacion_pais)
+      distinct(departamento) 
+    return(c("", operacion_pais))
   })
   
   municipio <- reactive({
@@ -22,11 +40,9 @@ server <- function(input, output, session){
     operacion_dep <- deps |> 
       filter(departamento == departamento_selected) |> 
       distinct(municipio)
-    return(operacion_dep)
+    return(c("", operacion_dep))
   })
   
-  
-  #observeEvent is used to update the next selectInput function in ui.R 
   observeEvent(input$pais, {
     updateSelectInput(session,
                       "departamentos", 
@@ -39,102 +55,68 @@ server <- function(input, output, session){
                       choices = municipio())
   })
   
-  #eventReactive start working at the moment the input is selected by the user
-  agregar_usuario <- eventReactive(input$save,{
-    
-    #this variable represents the fullname entered by the user
-    ui_fullname <- input$fullname |> as.character()
-    #this variable represents the id entered by user
-    ui_id <- input$id |>  as.character()
-    #this variable represents the hotmail entered by user
-    ui_hotmail <- input$hotmail |>  as.character()
-    #this variable represents the adress entered by user
-    ui_adress <- input$adress |>  as.character()
-    #this variable represents the cellphone entered by user
-    ui_cel <- input$cel |>  as.character()
-    #this variable represents the country entered by user
-    ui_pais <- input$pais |>  as.character()
-    #this variable represents the department entered by user
-    ui_departamentos <- input$departamentos |>  as.character()
-    #this variable represents the city entered by user
-    ui_cities <- input$municipios |>  as.character()
-    
-  
-    general_info <- tibble(
-      nombre_completo = ui_fullname,
-      cedula = ui_id,
-      correo = ui_hotmail,
-      direccion = ui_adress,
-      numero_de_celular = ui_cel,
-      pais = ui_pais,
-      departamentos = ui_departamentos,
-      municipios = ui_cities)
-    
-    colnames(general_info) <- colnames(general_info) |> 
-      str_replace_all("_", " ")
-    
-    return(general_info)
-  })
-#Función para retornar un texto después de identificar el usuario  id=1234
-#  validation_process <- eventReactive(input$validation_button,{
-#    user_validation <- input$cc_validation_registro
-#    if (user_validation %in% user_check$user_id) {
-#      return("Su ID se encuentra registrado, bienvenido")
-#    } else {
-#      return("Lo siento, su ID no se encuentra registrado, por favor haga el registro para ingresar a la tienda")
-#    }
-#  })
-  
+  #-------------- Alerta usuarios registrados - no registrados ---------------#
+
   observeEvent(input$validation_button, {
     user_validation <- input$cc_validation_registro
     if (user_validation %in% user_check$user_id) {
       shinyalert(
         title = "",
         text = "Su usuario se encuentra registrado, puede acceder a la tienda",
-        size = "xs", 
-        closeOnEsc = TRUE,
+        size = "xs",
         closeOnClickOutside = TRUE,
-        html = FALSE,
-        type = "success",
-        showConfirmButton = TRUE,
-        showCancelButton = FALSE,
-        confirmButtonText = "OK",
-        confirmButtonCol = "#AEDEF4",
-        timer = 0,
-        imageUrl = "",
-        animation = TRUE)
+        type = "success"
+      )
     } else {
       shinyalert(
         title = "",
         text = "No se encuentra registrado, por favor llene el formulario de registro",
-        size = "xs", 
-        closeOnEsc = TRUE,
+        size = "xs",
         closeOnClickOutside = TRUE,
-        html = FALSE,
-        type = "warning",
-        showConfirmButton = TRUE,
-        showCancelButton = FALSE,
-        confirmButtonText = "OK",
-        confirmButtonCol = "#AEDEF4",
-        timer = 0,
-        imageUrl = "",
-        animation = TRUE
+        type = "warning"
       )
     }
   })
   
-  output$table <- renderReactable({
-    reactable(agregar_usuario(),
-                defaultColDef = colDef(
-                  align = "center"))
-    })
+  #------------ Alerta ingresar formulario de registro completo---------------#
   
-  
-  
-  #Para asignar valores al selectinput de la tienda:
+  observeEvent(input$save, {
+    
+    if (input$fullname == "" | input$id == "" | input$hotmail == "" | 
+        input$adress  == "" | input$cel == "" | input$pais == "" | 
+        input$departamentos == "" | input$municipios == "") {
+      
+      shinyalert(
+        title = "",
+        text = "Por favor rellenar todo el formulario",
+        size = "xs", 
+        closeOnClickOutside = TRUE,
+        type = "warning"
+      )
+    } else {
+      shinyalert(
+        title = "",
+        text = "Registrado exitosamente, bienvenido",
+        size = "xs",
+        closeOnClickOutside = TRUE,
+        type = "success"
+      )
+    }
+  })
+
+  #-------------- Definición valores de los selectInput en shop --------------#
+    
   choices_categ_productos <- reactive({
-    shop_cat_producto <- read_xlsx(bd_demo, sheet = "categorias_id")
-    c(" ", shop_cat_producto$categoría)
+    c(" ", shop_cat_producto$categoría)  
+  })
+  
+  choices_productos <- reactive ({
+    cat_selected <- input$categoria_productos
+    productos <- as_tibble(left_join(
+      shop_productos, shop_cat_producto, by = "categoria_id"))
+    productos1 <- productos |>  filter(cat_selected == productos$categoría) |> 
+      distinct(producto) 
+    return(productos1)
   })
   
   observe({
@@ -143,10 +125,30 @@ server <- function(input, output, session){
                       choices = choices_categ_productos())
   })
   
+  observeEvent(input$categoria_productos, {
+    updateSelectInput(session,
+                      inputId = "productos",
+                      choices = choices_productos())
+  })
   
+  #------------------------ Cálculo de valor a pagar -------------------------#
   
+  payment_check <- reactive({
+    cantidad_a_comprar <- input$cantidad_productos_solicitados |> as.numeric()
+    producto_a_comprar <- input$productos
+    valor_producto_unitario <- shop_productos |> 
+      filter(producto_a_comprar == producto) |> 
+      select(precio) |>  pull()
+    if (producto_a_comprar == "") {
+      final_text <- ""
+    } else {
+      operacion_compra <- cantidad_a_comprar * valor_producto_unitario
+      final_text <- paste(c("Valor a pagar: $", operacion_compra))
+    }
+    return(final_text)
+  })
   
-#  output$user_validation <- renderText({             #id = 1234
-#    validation_process()
-#  })
+  output$payment <- renderText({
+    payment_check()
+  })
 }

@@ -28,9 +28,11 @@ deps <- deps |>
   clean_names() #clean_names functions just can be applied in non-null tibbles -
                 #and it return values " " as "_" and uppers as lower
 
-user_check <- read_xlsx(bd_demo, sheet = "usuarios_registrados")
+shop_cat_producto <- read_xlsx(bd_demo, sheet = "categorias_id")
 
 shop_productos <- read_xlsx(bd_demo, sheet = "productos_id")
+
+user_check <- read_xlsx(bd_demo, sheet = "usuarios_registrados")
 
 
 #creación del tema
@@ -56,8 +58,8 @@ mytheme <- create_theme(
   ),
   adminlte_global(
     content_bg = "#FFF", #body environment 
-    box_bg = "#9C20CD", #Not found
-    info_box_bg = "#9C20CD" #Not found
+    box_bg = "#D8DEE9", #???
+    info_box_bg = "#FFFFFF" #???
   )
 )
 
