@@ -1,29 +1,20 @@
 server <- function(input, output, session){
   
-  # shiny::observe({
-  #   user_validation <- input$cc_validation_registro
-  #   if (user_validation %notin% user_check$user_id) {
-  #     shinyjs::hide(session, "shop")
-  #   }
-  # })
+  #------------------Para mantener ocultos los menuItem -----------------------#
   
-  #---Para redirigir el usuario a la pestaña shop en caso de estar registrado---#
+  shinyjs::hide(selector = '[data-value="registro"]')
+  shinyjs::hide(selector = '[data-value="shop"]')
+  
+  #------Para redirigir el usuario en caso de estar o no estar registrado------#
   
   observeEvent(input$validation_button, {
     user_validation <- input$cc_validation_registro
     if (user_validation %in% user_check$user_id) {
       updateTabItems(session, "tabs", "shop")
+    } else {
+      updateTabItems(session, "tabs", "registro")
     }
   })
-  
-  #---Para redirigir el usuario a la pestaña Registro en caso de estar registrado---#
-  
-  observeEvent(input$validation_button, {
-    user_validation <- input$cc_validation_registro
-    if (!user_validation %in% user_check$user_id) {
-      updateTabItems(session, "tabs", "informacion_ingresada", "registro")
-    }
-   })
   
   #------------- Definición valores de los selectInput en registro ------------#
   
@@ -67,6 +58,8 @@ server <- function(input, output, session){
         closeOnClickOutside = TRUE,
         type = "success"
       )
+      shinyjs::hide(selector = '[data-value="registro"]')
+      shinyjs::show(selector = '[data-value="shop"]')
     } else {
       shinyalert(
         title = "",
@@ -75,6 +68,8 @@ server <- function(input, output, session){
         closeOnClickOutside = TRUE,
         type = "warning"
       )
+      shinyjs::show(selector = '[data-value="registro"]')
+      shinyjs::hide(selector = '[data-value="shop"]')
     }
   })
   
@@ -88,7 +83,7 @@ server <- function(input, output, session){
       
       shinyalert(
         title = "",
-        text = "Por favor rellenar todo el formulario",
+        text = "Por favor termine de llenar el formulario",
         size = "xs", 
         closeOnClickOutside = TRUE,
         type = "warning"
@@ -101,6 +96,9 @@ server <- function(input, output, session){
         closeOnClickOutside = TRUE,
         type = "success"
       )
+      updateTabItems(session, "tabs", "shop")
+      shinyjs::hide(selector = '[data-value="registro"]')
+      shinyjs::show(selector = '[data-value="shop"]')
     }
   })
 
@@ -131,6 +129,29 @@ server <- function(input, output, session){
                       choices = choices_productos())
   })
   
+  #---------------------------- Alerta de compra  ----------------------------#
+  
+  observeEvent(input$compra, {
+    if (input$categoria_productos == "" | input$productos == "" |
+        input$cantidad_productos_solicitados == "") {
+      shinyalert(
+        title = "",
+        text = "Por favor complete la selección",
+        size = "xs", 
+        closeOnClickOutside = TRUE,
+        type = "warning"
+      )
+    } else {
+      shinyalert(
+        title = "",
+        text = "su compra ha sido registrada exitosamente",
+        size = "xs",
+        closeOnClickOutside = TRUE,
+        type = "success"
+      )
+    }
+  })
+  
   #------------------------ Cálculo de valor a pagar -------------------------#
   
   payment_check <- reactive({
@@ -152,3 +173,5 @@ server <- function(input, output, session){
     payment_check()
   })
 }
+
+#----------------- Limpieza de inputs para agregar nueva compra ---------------#
