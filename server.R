@@ -1,9 +1,20 @@
 server <- function(input, output, session){
   
-  #------------------Para mantener ocultos los menuItem -----------------------#
+  #------------------ Se ocultan algunos objetos ----------------------#
   
   shinyjs::hide(selector = '[data-value="registro"]')
   shinyjs::hide(selector = '[data-value="shop"]')
+  shinyjs::hide("reset_inputs")
+  
+  #-------------------- Funcionalidad botón de salida -------------------------#
+  
+  observeEvent(input$reset_inputs, {
+    shinyjs::reset()
+    updateTabItems(session, "tabs", "informacion_ingresada")
+    shinyjs::hide(selector = '[data-value="registro"]')
+    shinyjs::hide(selector = '[data-value="shop"]')
+    shinyjs::hide("reset_inputs")
+  })
   
   #------Para redirigir el usuario en caso de estar o no estar registrado------#
   
@@ -14,6 +25,7 @@ server <- function(input, output, session){
     } else {
       updateTabItems(session, "tabs", "registro")
     }
+    shinyjs::show("reset_inputs")
   })
   
   #------------- Definición valores de los selectInput en registro ------------#

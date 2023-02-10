@@ -12,12 +12,24 @@ ui <- dashboardPage(
         tabName = "registro"),
       menuItem(
         text = "Shop", 
-        tabName = "shop"))),
+        tabName = "shop"),
+      menuItem(
+        text = "Inventario", 
+        tabName = "inventario"),
+      br(),
+      br(),
+      #"PENDIENTE HACER QUE EL BOTON SE VEA AL FINAL DEL SIDEBAR Y NO SE PUEDA MOVER"
+      br(),
+      br(),
+      actionButton(
+        inputId = "reset_inputs",
+        label = "Salida")
+      )),
   
   
   body <- dashboardBody(
     use_theme(mytheme),              #mytheme is defined in global
-    useShinyjs(),
+    useShinyjs(),                    #now we can use shinyjs functions
     conditionalPanel("input.tabs == 'informacion_ingresada'",
                      br(),
                      fluidRow( 
@@ -122,6 +134,26 @@ ui <- dashboardPage(
                                            label = "Comprar"
                               )),
                        column(width = 4)
+                     )
+                     ),
+    conditionalPanel("input.tabs == 'inventario'",
+                     tabsetPanel(
+                       tabPanel(
+                         h1("A este apartado solo podrá acceder el usuario administrador"),
+                         inputId = "consulta_inventario",
+                         title = "Consultar",
+                         helpText("Aquí va tabla de inventario actual")),
+                       tabPanel(
+                         inputId = "agregar_inventario",
+                         title = "Añadir",
+                         helpText("Aquí se agregan los productos que se van a añadir 
+                                  al inventario (productos ya registrados en la base)")),
+                       tabPanel(
+                         inputId = "registrar_inventario",
+                         title = "Registrar",
+                         helpText("Los productos nuevos no registrados en la base
+                                  se añaden desde este medio, (tipo de producto, 
+                                  producto y precio)"))
                      )
                      )
   )
